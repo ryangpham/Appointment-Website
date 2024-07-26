@@ -2,9 +2,9 @@
 
 {% block style %}
     .card {
-    padding: 30px 40px;
-    margin-top: 60px;
-    margin-bottom: 60px;
+        padding: 30px 40px;
+        margin-top: 60px;
+        margin-bottom: 60px;
         border: none !important;
         box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2)
     }
@@ -19,24 +19,32 @@
 
     input,
     textarea,
-    button {
-        padding: 8px 15px;
+    button,
+    select {
+        padding: 10px 15px;
         border-radius: 5px !important;
-        margin: 5px 0px;
+        margin: 10px 0;
         box-sizing: border-box;
         border: 1px solid #ccc;
-        font-size: 18px !important;
-        font-weight: 300
+        font-size: 16px !important;
+        font-weight: 300;
+    }
+
+    .nowrap {
+        white-space: nowrap;
+    }
+
+    #time-slot {
+        width: 100%;
     }
 
     input:focus,
-    textarea:focus {
-        -moz-box-shadow: none !important;
-        -webkit-box-shadow: none !important;
+    textarea:focus,
+    select:focus {
         box-shadow: none !important;
         border: 1px solid #00BCD4;
         outline-width: 0;
-        font-weight: 400
+        font-weight: 400;
     }
 
     .btn-block {
@@ -44,7 +52,7 @@
         font-size: 15px !important;
         font-weight: 400;
         height: 43px;
-        cursor: pointer
+        cursor: pointer;
     }
 
     .btn-block:hover {
@@ -52,8 +60,6 @@
     }
 
     button:focus {
-        -moz-box-shadow: none !important;
-        -webkit-box-shadow: none !important;
         box-shadow: none !important;
         outline-width: 0
     }
@@ -61,73 +67,75 @@
 {% endblock style %}
 
 {% block content %}
-
-    {% if messages %}
+{% if messages %}
     <div class="card notification-card notification-invitation">
         <div class="card-body">
             {% for message in messages %}
-                <div class="card-title">{{message}} </div>
+                <div class="card-title">{{ message }}</div>
             {% endfor %}
         </div>
-      </div>
-    {% endif %}
+    </div>
+{% endif %}
 
-    <div class="container-fluid px-1 py-5 mx-auto">
-        <div class="row d-flex justify-content-center">
-            <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
-                <h3>
-                    Book an appointment
-                </h3>
-                <p class="blue-text">Use the following form to contact us and request an appointment..</p>
-                <div class="card">
-                    
-                    <form class="form-card" method="POST" action="{% url 'appointment' %}">
-                        {% csrf_token %}
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex"> 
-                            <label class="form-control-label px-3">First name<span class="text-danger"> *</span>
-                            </label> 
-                            <input required type="text" id="fname" name="fname" placeholder="Enter your first name" onblur="validate(1)"> 
+<div class="container-fluid px-1 py-5 mx-auto">
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+            <h3>Book an appointment</h3>
+            <p class="blue-text">Use the following form to contact us and request an appointment.</p>
+            <div class="card">
+                <form class="form-card" method="POST" action="{% url 'appointment' %}">
+                    {% csrf_token %}
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label class="form-control-label px-3">First name<span class="text-danger"> *</span></label>
+                            <input required type="text" id="fname" name="fname" placeholder="Enter your first name" onblur="validate(1)">
                         </div>
-
-                        <div class="form-group col-sm-6 flex-column d-flex"> 
-                            <label class="form-control-label px-3">Last name<span class="text-danger"> *</span></label> 
-                            <input required type="text" id="lname" name="lname" placeholder="Enter your last name" onblur="validate(2)"> 
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label class="form-control-label px-3">Last name<span class="text-danger"> *</span></label>
+                            <input required type="text" id="lname" name="lname" placeholder="Enter your last name" onblur="validate(2)">
                         </div>
-
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label class="form-control-label px-3">Email<span class="text-danger"> *</span></label>
+                            <input required type="email" id="email" name="email" placeholder="Enter your email" onblur="validate(3)">
                         </div>
-
-                        <div class="row justify-content-between text-left">
-
-                            <div class="form-group col-sm-6 flex-column d-flex"> 
-                                <label class="form-control-label px-3">Email<span class="text-danger"> *</span>
-                                </label> 
-                                <input type="text" id="email" name="email" placeholder="" onblur="validate(3)"> 
-                            </div>
-
-                            <div class="form-group col-sm-6 flex-column d-flex"> 
-                             <label class="form-control-label px-3">Phone number<span class="text-danger"> *</span></label> 
-                              <input type="text" id="mob" name="mobile" placeholder="" onblur="validate(4)"> 
-                            </div>
-
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label class="form-control-label px-3">Phone number<span class="text-danger"> *</span></label>
+                            <input required type="text" id="mob" name="mobile" placeholder="Enter your phone number" onblur="validate(4)">
                         </div>
-
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 flex-column d-flex"> 
-                                <label class="form-control-label px-3">Your request<span class="text-danger"> *</span></label> 
-                                <textarea type="text" id="ans" name="request" placeholder="" onblur="validate(6)"></textarea> 
-                            </div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label class="form-control-label px-3">Date<span class="text-danger"> *</span></label>
+                            <input required type="date" id="appointment-date" name="appointment_date" onblur="validate(5)">
                         </div>
-                        <div class="row justify-content-end">
-                            <div class="form-group col-sm-6"> <button type="submit" class="btn-block btn-primary">Send</button> </div>
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label class="form-control-label px-3 nowrap">Time Slot<span class="text-danger"> *</span></label>
+                            <select required id="time-slot" name="time_slot" onblur="validate(6)">
+                                <option value="">Select a time slot</option>
+                            </select>
+                            
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-12 flex-column d-flex">
+                            <label class="form-control-label px-3">Your request<span class="text-danger"> *</span></label>
+                            <textarea required id="ans" name="request" placeholder="Enter your request" onblur="validate(7)"></textarea>
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="form-group col-sm-6">
+                            <button type="submit" class="btn-block btn-primary">Send</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-  
+</div>
 {% endblock content %}
+
 
 {% block script %}
     function validate(val) {
@@ -135,8 +143,9 @@
     v2 = document.getElementById("lname");
     v3 = document.getElementById("email");
     v4 = document.getElementById("mob");
-    v5 = document.getElementById("job");
-    v6 = document.getElementById("ans");
+    v5 = document.getElementById("appointment-date");
+    v6 = document.getElementById("time-slot");
+    v7 = document.getElementById("ans");
 
     flag1 = true;
     flag2 = true;
@@ -144,6 +153,7 @@
     flag4 = true;
     flag5 = true;
     flag6 = true;
+    flag7 = true;
 
     if(val>=1 || val==0) {
     if(v1.value == "") {
@@ -207,8 +217,52 @@
     }
     }
 
-    flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6;
+    if(val>=7 || val==0) {
+    if(v7.value == "") {
+    v7.style.borderColor = "red";
+    flag7 = false;
+    }
+    else {
+    v7.style.borderColor = "green";
+    flag7 = true;
+    }
+    }
+
+    flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6 && flag7;
 
     return flag;
     }
+
+    document.getElementById('appointment-date').addEventListener('change', function () {
+        var selectedDate = new Date(this.value);
+        var selectedDay = selectedDate.getDay();
+        var timeSlotSelect = document.getElementById('time-slot');
+        timeSlotSelect.innerHTML = '<option value="">Select a time slot</option>';
+
+        var timeSlots;
+        if (selectedDay === 0) { // Sunday
+            timeSlots = [
+                "12:00 pm", "12:30 pm", "01:00 pm", "01:30 pm",
+                "02:00 pm", "02:30 pm", "03:00 pm", "03:30 pm",
+                "04:00 pm", "04:30 pm", "05:00 pm"
+            ];
+        } else { // Other days
+            timeSlots = [
+                "10:00 am", "10:30 am", "11:00 am", "11:30 am",
+                "12:00 pm", "12:30 pm", "01:00 pm", "01:30 pm",
+                "02:00 pm", "02:30 pm", "03:00 pm", "03:30 pm",
+                "04:00 pm", "04:30 pm", "05:00 pm", "05:30 pm",
+                "06:00 pm"
+            ];
+        }
+
+        for (var i = 0; i < timeSlots.length; i++) {
+            var option = document.createElement('option');
+            option.value = timeSlots[i];
+            option.text = timeSlots[i];
+            timeSlotSelect.appendChild(option);
+        }
+    });
+
+    
 {% endblock script %}
