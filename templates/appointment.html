@@ -110,6 +110,13 @@
                             <label class="form-control-label px-3">Date<span class="text-danger"> *</span></label>
                             <input required type="date" id="appointment-date" name="appointment_date" onblur="validate(5)">
                         </div>
+
+                        <script>
+                            const today = new Date().toISOString().split("T")[0];
+                            document.getElementById("appointment-date").setAttribute("min", today);
+                        </script>
+
+                        
                         <div class="form-group col-sm-6 flex-column d-flex">
                             <label class="form-control-label px-3 nowrap">Time Slot<span class="text-danger"> *</span></label>
                             <select required id="time-slot" name="time_slot" onblur="validate(6)">
@@ -134,6 +141,7 @@
         </div>
     </div>
 </div>
+
 {% endblock content %}
 
 
@@ -233,14 +241,21 @@
     return flag;
     }
 
-    document.getElementById('appointment-date').addEventListener('change', function () {
-        var selectedDate = new Date(this.value);
-        var selectedDay = selectedDate.getDay();
-        var timeSlotSelect = document.getElementById('time-slot');
+    function setDefaultDate() {
+        const today = new Date().toISOString().split("T")[0];
+        const dateInput = document.getElementById("appointment-date");
+        dateInput.value = today;
+        dateInput.setAttribute("min", today);
+    }
+
+    function updateTimeSlots() {
+        const selectedDate = new Date(document.getElementById("appointment-date").value);
+        const selectedDay = selectedDate.getDay();
+        const timeSlotSelect = document.getElementById("time-slot");
         timeSlotSelect.innerHTML = '<option value="">Select a time slot</option>';
 
-        var timeSlots;
-        if (selectedDay === 0) { // Sunday
+        let timeSlots;
+        if (selectedDay === 6) { // Sunday
             timeSlots = [
                 "12:00 pm", "12:30 pm", "01:00 pm", "01:30 pm",
                 "02:00 pm", "02:30 pm", "03:00 pm", "03:30 pm",
@@ -252,17 +267,21 @@
                 "12:00 pm", "12:30 pm", "01:00 pm", "01:30 pm",
                 "02:00 pm", "02:30 pm", "03:00 pm", "03:30 pm",
                 "04:00 pm", "04:30 pm", "05:00 pm", "05:30 pm",
-                "06:00 pm"
+                "06:00 pm", "06:30 pm", "07:00 pm"
             ];
         }
 
-        for (var i = 0; i < timeSlots.length; i++) {
-            var option = document.createElement('option');
-            option.value = timeSlots[i];
-            option.text = timeSlots[i];
+        for (const slot of timeSlots) {
+            const option = document.createElement('option');
+            option.value = slot;
+            option.text = slot;
             timeSlotSelect.appendChild(option);
         }
-    });
+    }
 
-    
+    document.getElementById("appointment-date").addEventListener("change", updateTimeSlots);
+
+    setDefaultDate();
+    updateTimeSlots();
+
 {% endblock script %}
