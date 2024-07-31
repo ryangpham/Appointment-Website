@@ -242,7 +242,7 @@
     }
 
     function setDefaultDate() {
-        const today = new Date().toISOString().split("T")[0];
+        const currentDate = new Date().toISOString().split("T")[0];
         const dateInput = document.getElementById("appointment-date");
         dateInput.value = today;
         dateInput.setAttribute("min", today);
@@ -253,6 +253,11 @@
         const selectedDay = selectedDate.getDay();
         const timeSlotSelect = document.getElementById("time-slot");
         timeSlotSelect.innerHTML = '<option value="">Select a time slot</option>';
+
+        const currentTime = new Date();
+        const today = new Date();
+        today.setDate(currentTime.getDate() - 1);
+        const isToday = selectedDate.toDateString() === today.toDateString();
 
         let timeSlots;
         if (selectedDay === 6) { // Sunday
@@ -271,7 +276,19 @@
             ];
         }
 
+        const currentHours = currentTime.getHours();
+        const currentMinutes = currentTime.getMinutes();
+
         for (const slot of timeSlots) {
+            const [time, period] = slot.split(" ");
+            let [hours, minutes] = time.split(":").map(Number);
+            if (period === "pm" && hours !== 12) {
+                hours += 12;
+            }
+
+            if (isToday && (hours < currentHours || (hours === currentHours && minutes < currentMinutes))) {
+                continue;
+            }
             const option = document.createElement('option');
             option.value = slot;
             option.text = slot;
