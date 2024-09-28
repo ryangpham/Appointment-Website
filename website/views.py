@@ -41,6 +41,12 @@ class AppointmentTemplateView(TemplateView):
         email = request.POST.get("email")
         mobile = request.POST.get("mobile")
         message = request.POST.get("request")
+        appointment_date = request.POST.get("appointment_date")
+        appointment_time = request.POST.get("time_slot")
+        appointment_time_24hr = datetime.datetime.strptime(appointment_time, "%I:%M %p").time()
+
+        print("Appointment Date:", appointment_date)
+        print("Appointment Time:", appointment_time)
 
         appointment = Appointment.objects.create(
             first_name = fname,
@@ -48,6 +54,8 @@ class AppointmentTemplateView(TemplateView):
             email = email,
             phone = mobile,
             request = message,
+            appointment_date=appointment_date,
+            appointment_time=appointment_time_24hr,
         )
 
         appointment.save()
@@ -93,6 +101,7 @@ class ManageAppointmentTemplateView(ListView):
         appointments = Appointment.objects.all()
         context.update({
             "title":"Manage Appointments",
+            "appointments":appointments,
         })
 
         return context

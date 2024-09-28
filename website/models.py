@@ -10,6 +10,8 @@ class Appointment(models.Model):
     sent_date = models.DateField(auto_now_add=True)
     accepted = models.BooleanField(default=False)
     accepted_date = models.DateField(auto_now_add=False, null=True, blank=True)
+    appointment_date = models.DateField(null=True, blank=True)
+    appointment_time = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         return self.first_name
