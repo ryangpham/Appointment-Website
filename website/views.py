@@ -71,7 +71,7 @@ class ManageAppointmentTemplateView(ListView):
     paginate_by = 3
 
     def post(self, request):
-        date = request.POST.get("date")
+        date = request.POST.get("appointment_date")
         appointment_id = request.POST.get("appointment-id")
         appointment = Appointment.objects.get(id=appointment_id)
         appointment.accepted = True
@@ -80,7 +80,8 @@ class ManageAppointmentTemplateView(ListView):
 
         data = {
             "fname":appointment.first_name,
-            "date":date,
+            "appointment_date":appointment.appointment_date,
+            "appointment_time":appointment.appointment_time.strftime("%I:%M %p")
         }
 
         message = get_template('email.html').render(data)
